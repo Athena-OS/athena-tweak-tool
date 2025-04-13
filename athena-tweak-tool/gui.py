@@ -125,6 +125,14 @@ def gui(self, Gtk, Gdk, GdkPixbuf, base_dir, os, Pango):
     # image = Gtk.Image().new_from_pixbuf(pixbuf)
 
     # =====================================================
+    #               PACKAGE MANAGER CHOICE
+    # =====================================================
+
+    def on_pkg_manager_changed(combo):
+        self.manager = combo.get_active_text()
+        print("Selected manager:", self.manager)
+
+    # =====================================================
     #               RESTART/QUIT BUTTON
     # =====================================================
 
@@ -139,6 +147,13 @@ def gui(self, Gtk, Gdk, GdkPixbuf, base_dir, os, Pango):
 
     lbl_distro = Gtk.Label(xalign=0)
     lbl_distro.set_markup("Working on\nAthena OS")
+    # Dropdown for selecting package manager
+    pkg_manager_combo = Gtk.ComboBoxText()
+    pkg_manager_combo.append_text("dnf")
+    pkg_manager_combo.append_text("rpm-ostree")
+    pkg_manager_combo.set_active(0)  # default to dnf
+    self.manager = pkg_manager_combo.get_active_text()
+    pkg_manager_combo.connect("changed", on_pkg_manager_changed)
     btn_reload_att = Gtk.Button(label="Reload ATT")
     btn_reload_att.set_size_request(100, 30)
     btn_reload_att.connect("clicked", self.on_reload_att_clicked)
@@ -177,10 +192,12 @@ def gui(self, Gtk, Gdk, GdkPixbuf, base_dir, os, Pango):
     hbox3 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
     hbox4 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
     hbox5 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
+    hbox6 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
 
     hbox1.pack_start(support_eventbox, False, False, 0)
     hbox2.pack_start(lbl_distro, False, False, 0)
-    #hbox5.pack_start(btn_reload_att, False, False, 0)
+    hbox5.pack_start(pkg_manager_combo, False, False, 10)
+    #hbox6.pack_start(btn_reload_att, False, False, 0)
     hbox3.pack_start(btn_restart_att, False, False, 0)
     hbox4.pack_start(btn_quit_att, False, False, 0)
 

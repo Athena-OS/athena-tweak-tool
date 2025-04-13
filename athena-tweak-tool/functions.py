@@ -373,7 +373,7 @@ def get_user_env_from_proc(user):
 
 def install_package(self, package, manager):
     if manager == "dnf":
-        command = "dnf -y install" + package
+        command = "dnf -y install " + package
     elif manager == "rpm-ostree":
         command = "rpm-ostree install " + package
 
@@ -388,14 +388,22 @@ def install_package(self, package, manager):
     else:
         try:
             print(command)
-            subprocess.call(
+            result = subprocess.call(
                 command.split(" "),
                 shell=False,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
             )
-            print(package + " is now installed")
-            GLib.idle_add(show_in_app_notification, self, package + " is now installed")
+            if result == 0:
+                print(package + " is now installed")
+                GLib.idle_add(show_in_app_notification, self, package + " is now installed")
+            else:
+                print(f"Failed to install {package}. Exit code: {result}")
+                GLib.idle_add(
+                    show_in_app_notification,
+                    self,
+                    f"Failed to install {package}. Exit code: {result}",
+                )
         except Exception as error:
             print(error)
 
@@ -446,14 +454,22 @@ def remove_package(self, package, manager):
     if check_package_installed(package):
         print(command)
         try:
-            subprocess.call(
+            result = subprocess.call(
                 command.split(" "),
                 shell=False,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
             )
-            print(package + " is now removed")
-            GLib.idle_add(show_in_app_notification, self, package + " is now removed")
+            if result == 0:
+                print(package + " is now removed")
+                GLib.idle_add(show_in_app_notification, self, package + " is now removed")
+            else:
+                print(f"Failed to remove {package}. Exit code: {result}")
+                GLib.idle_add(
+                    show_in_app_notification,
+                    self,
+                    f"Failed to remove {package}. Exit code: {result}",
+                )
         except Exception as error:
             print(error)
     else:
@@ -608,6 +624,11 @@ def close_in_app_notification(self):
     self.notification_revealer.set_reveal_child(False)
     GLib.source_remove(self.timeout_id)
     self.timeout_id = None
+
+
+def do_pulse(data, prog):
+    prog.pulse()
+    return True
 
 
 # =====================================================

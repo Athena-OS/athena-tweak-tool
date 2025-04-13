@@ -121,7 +121,7 @@ Feel free to express your thoughts and enjoy on Athena OS!"
         github_eventbox.connect(
             "button_press_event",
             self.on_support_click,
-            "https://github.com/arcolinux/archlinux-tweak-tool-dev",
+            "https://github.com/Athena-OS/athena-tweak-tool",
         )
         github_eventbox.set_property("has-tooltip", True)
         github_eventbox.connect(

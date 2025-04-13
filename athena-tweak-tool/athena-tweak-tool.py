@@ -89,8 +89,6 @@ class Main(Gtk.Window):
         self.image_DE = Gtk.Image()
         self.image_login = Gtk.Image()
 
-        self.manager = "rpm-ostree"
-
         self.grub_image_path = ""
         self.login_wallpaper_path = ""
         self.fb = Gtk.FlowBox()
@@ -222,6 +220,7 @@ class Main(Gtk.Window):
     def on_install_clicked_design(self, widget, state):
         print("Installing " + self.d_combo_design.get_active_text())
         #design.check_lock(self, self.d_combo_design.get_active_text(), state)
+        design.install_design(self, self.d_combo_design.get_active_text(), state, self.manager)
 
     def on_default_clicked_design(self, widget):
         if design.check_design(self.d_combo_design.get_active_text()) is True:
@@ -261,6 +260,7 @@ class Main(Gtk.Window):
     def on_install_clicked_desktop(self, widget, state):
         print("Installing " + self.d_combo_desktop.get_active_text())
         #desktopr.check_lock(self, self.d_combo_desktop.get_active_text(), state)
+        desktopr.install_desktop(self, self.d_combo_desktop.get_active_text(), state, self.manager)
 
     def on_default_clicked_desktop(self, widget):
         if desktopr.check_desktop(desktopr.session_mapping.get(self.d_combo_desktop.get_active_text())) is True:
@@ -306,19 +306,27 @@ class Main(Gtk.Window):
     # ====================================================================
 
     def on_click_probe(self, widget):
-        fn.install_package(self, "hw-probe", self.manager)
-        fn.install_package(self, "alacritty", self.manager)
         try:
-            fn.subprocess.call(
-                "alacritty --hold -e /usr/share/athena-tweak-tool/data/arco/bin/arcolinux-probe",
+            fn.install_package(self, "hw-probe", self.manager)
+            fn.install_package(self, "alacritty", self.manager)
+            result = fn.subprocess.call(
+                "alacritty --hold -e hw-probe -all -upload",
                 shell=True,
                 stdout=fn.subprocess.PIPE,
                 stderr=fn.subprocess.STDOUT,
             )
-            print("Probe link has been created")
-            GLib.idle_add(
-                fn.show_in_app_notification, self, "Probe link has been created"
-            )
+            if result == 0:
+                print("Probe link has been created")
+                GLib.idle_add(
+                    fn.show_in_app_notification, self, "Probe link has been created"
+                )
+            else:
+                print(f"Failed to create probe link. Exit code: {result}")
+                GLib.idle_add(
+                    fn.show_in_app_notification,
+                    self,
+                    f"Failed to create probe link. Exit code: {result}",
+                )
         except Exception as error:
             print(error)
 
