@@ -148,6 +148,8 @@ def gui(self, Gtk, Gdk, GdkPixbuf, base_dir, os, Pango):
     lbl_distro = Gtk.Label(xalign=0)
     lbl_distro.set_markup("Working on\nAthena OS")
     # Dropdown for selecting package manager
+    lbl_manager = Gtk.Label(xalign=0)
+    lbl_manager.set_markup("Package Manager")
     pkg_manager_combo = Gtk.ComboBoxText()
     pkg_manager_combo.append_text("dnf")
     pkg_manager_combo.append_text("rpm-ostree")
@@ -193,11 +195,13 @@ def gui(self, Gtk, Gdk, GdkPixbuf, base_dir, os, Pango):
     hbox4 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
     hbox5 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
     hbox6 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
+    hbox7 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=2)
 
     hbox1.pack_start(support_eventbox, False, False, 0)
     hbox2.pack_start(lbl_distro, False, False, 0)
-    hbox5.pack_start(pkg_manager_combo, False, False, 10)
-    #hbox6.pack_start(btn_reload_att, False, False, 0)
+    hbox5.pack_start(lbl_manager, False, False, 0)
+    hbox6.pack_start(pkg_manager_combo, False, False, 0)
+    #hbox7.pack_start(btn_reload_att, False, False, 0)
     hbox3.pack_start(btn_restart_att, False, False, 0)
     hbox4.pack_start(btn_quit_att, False, False, 0)
 
@@ -207,6 +211,7 @@ def gui(self, Gtk, Gdk, GdkPixbuf, base_dir, os, Pango):
     ivbox.pack_start(hbox1, False, False, 0)
     ivbox.pack_start(hbox2, False, False, 0)
     ivbox.pack_start(hbox5, False, False, 0)
+    ivbox.pack_start(hbox6, False, False, 0)
     ivbox.pack_start(hbox3, False, False, 0)
     ivbox.pack_start(hbox4, False, False, 0)
 
