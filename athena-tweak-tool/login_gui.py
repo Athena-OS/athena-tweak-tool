@@ -29,11 +29,11 @@ def gui(self, Gtk, GdkPixbuf, vboxstack24, login, fn, base_dir, Pango):
     # =======================================
     #               DROPDOWN
     # =======================================
-    label_warning = Gtk.Label(xalign=0)
-    label_warning.set_markup(
-        "<b>Make sure the Athena repository is active \
-- see Pacman tab</b>\n\nEnjoy these beautiful login themes"
-    )
+#    label_warning = Gtk.Label(xalign=0)
+#    label_warning.set_markup(
+#        "<b>Make sure the Athena repository is active \
+#- see Pacman tab</b>\n\nEnjoy these beautiful login themes"
+#    )
     label = Gtk.Label(xalign=0)
     label.set_text("Select a login")
 
@@ -49,7 +49,7 @@ def gui(self, Gtk, GdkPixbuf, vboxstack24, login, fn, base_dir, Pango):
     self.d_combo_login.set_active(0)
     self.d_combo_login.set_wrap_width(1)
 
-    dropbox.pack_start(label_warning, False, False, 0)
+    # dropbox.pack_start(label_warning, False, False, 0)
     # dropbox.pack_start(button_arco_repo, False, False, 0)
     dropbox.pack_start(label, False, False, 20)
     dropbox.pack_start(self.d_combo_login, False, False, 0)
@@ -64,26 +64,14 @@ def gui(self, Gtk, GdkPixbuf, vboxstack24, login, fn, base_dir, Pango):
     # =======================================
 
     self.button_install_login = Gtk.Button(label="Install")
-    self.button_reinstall_login = Gtk.Button(label="Re-Install")
 
     self.button_adt = Gtk.Button()
     self.button_adt.set_margin_top(70)
     self.button_adt.set_size_request(100, 20)
 
-    if fn.check_package_installed("arcolinux-desktop-trasher-git") is True:
-        self.adt_installed = True
-        self.button_adt.set_label("Remove the ArcoLinux Desktop Trasher")
-        self.button_adt.connect("clicked", self.on_launch_adt_clicked)
-    else:
-        self.adt_installed = False
-        self.button_adt.set_label("Install the ArcoLinux Desktop Trasher")
-        self.button_adt.connect("clicked", self.on_launch_adt_clicked)
-
     self.button_install_login.connect("clicked", self.on_install_clicked_login, "inst")
-    self.button_reinstall_login.connect("clicked", self.on_install_clicked_login, "reinst")
 
     buttonbox.pack_start(self.button_install_login, True, True, 0)
-    # buttonbox.pack_start(self.button_reinstall_login, True, True, 0)
     # buttonbox.pack_start(button_uninstall, True, True, 0)
 
     # =======================================

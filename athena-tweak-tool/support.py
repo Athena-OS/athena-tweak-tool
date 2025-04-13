@@ -8,7 +8,7 @@ from gi.repository import Gtk, GdkPixbuf
 import functions as fn
 
 
-gi.require_version("Gtk", "3.0")
+#gi.require_version("Gtk", "3.0")
 
 base_dir = fn.path.dirname(fn.path.realpath(__file__))
 
