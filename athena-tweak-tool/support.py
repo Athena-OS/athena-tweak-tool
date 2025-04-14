@@ -8,7 +8,7 @@ from gi.repository import Gtk, GdkPixbuf
 import functions as fn
 
 
-#gi.require_version("Gtk", "3.0")
+gi.require_version("Gtk", "3.0")
 
 base_dir = fn.path.dirname(fn.path.realpath(__file__))
 
@@ -121,7 +121,7 @@ Feel free to express your thoughts and enjoy on Athena OS!"
         github_eventbox.connect(
             "button_press_event",
             self.on_support_click,
-            "https://github.com/Athena-OS/athena-tweak-tool",
+            "https://github.com/arcolinux/archlinux-tweak-tool-dev",
         )
         github_eventbox.set_property("has-tooltip", True)
         github_eventbox.connect(

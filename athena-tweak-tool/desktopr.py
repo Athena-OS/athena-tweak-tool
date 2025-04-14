@@ -29,8 +29,8 @@ desktops = [
     "XFCE Picom",
     "XFCE Refined",
 ]
-pkexec_dnf = ["pkexec", "dnf", "install", "-y"]
-pkexec_rpm_ostree = ["pkexec", "rpm-ostree", "install"]
+pkexec = ["pkexec", "pacman", "-S", "--needed", "--noconfirm", "--ask=4"]
+pkexec_reinstall = ["pkexec", "pacman", "-S", "--noconfirm", "--ask=4"]
 copy = ["cp", "-Rv"]
 
 session_mapping = {
@@ -133,55 +133,54 @@ def check_desktop(session):
     return False
 
 
-#def check_lock(self, desktop, state):
-#    """check pacman lock"""
-#    if fn.path.isfile("/var/lib/pacman/db.lck"):
-#        mess_dialog = Gtk.MessageDialog(
-#            parent=self,
-#            flags=0,
-#            message_type=Gtk.MessageType.INFO,
-#            buttons=Gtk.ButtonsType.YES_NO,
-#            text="Lock File Found",
-#        )
-#        mess_dialog.format_secondary_markup(
-#            "pacman lock file found, do you want to remove it and continue?"
-#        )  # noqa
-#
-#        result = mess_dialog.run()
-#        mess_dialog.destroy()
-#
-#        if result in (Gtk.ResponseType.OK, Gtk.ResponseType.YES):
-#            fn.unlink("/var/lib/pacman/db.lck")
-#            # print("YES")
-#            t1 = fn.threading.Thread(
-#                target=install_desktop,
-#                args=(self, self.d_combo_desktop.get_active_text(), state),
-#            )
-#            t1.daemon = True
-#            t1.start()
-#    else:
-#        # print("NO FILE")
-#        t1 = fn.threading.Thread(
-#            target=install_desktop, args=(self, self.d_combo_desktop.get_active_text(), state)
-#        )
-#        t1.daemon = True
-#        t1.start()
-#
-#    return False
+def check_lock(self, desktop, state):
+    """check pacman lock"""
+    if fn.path.isfile("/var/lib/pacman/db.lck"):
+        mess_dialog = Gtk.MessageDialog(
+            parent=self,
+            flags=0,
+            message_type=Gtk.MessageType.INFO,
+            buttons=Gtk.ButtonsType.YES_NO,
+            text="Lock File Found",
+        )
+        mess_dialog.format_secondary_markup(
+            "pacman lock file found, do you want to remove it and continue?"
+        )  # noqa
+
+        result = mess_dialog.run()
+        mess_dialog.destroy()
+
+        if result in (Gtk.ResponseType.OK, Gtk.ResponseType.YES):
+            fn.unlink("/var/lib/pacman/db.lck")
+            # print("YES")
+            t1 = fn.threading.Thread(
+                target=install_desktop,
+                args=(self, self.d_combo_desktop.get_active_text(), state),
+            )
+            t1.daemon = True
+            t1.start()
+    else:
+        # print("NO FILE")
+        t1 = fn.threading.Thread(
+            target=install_desktop, args=(self, self.d_combo_desktop.get_active_text(), state)
+        )
+        t1.daemon = True
+        t1.start()
+
+    return False
 
 
-def check_package_and_remove(self, package, manager):
+def check_package_and_remove(self, package):
     """remove a package if exists"""
     if fn.check_package_installed(package):
         GLib.idle_add(
             self.desktopr_stat.set_text,
             f"Removing {package}...",
         )
-        fn.remove_package(self, package, manager)
+        fn.remove_package_rns(self, package)
 
 
-def install_desktop(self, desktop, state, manager):
-    # input parameter 'state' can be removed
+def install_desktop(self, desktop, state):
     # error = False
     # make backup of your .config
     now = datetime.datetime.now()
@@ -200,6 +199,9 @@ def install_desktop(self, desktop, state, manager):
         fn.home + "/.config-att/config-att-" + now.strftime("%Y-%m-%d-%H-%M-%S")
     )
 
+    if fn.distr == "archcraft":
+        fn.clear_skel_directory()
+
     print(desktop)
 
     GLib.idle_add(self.desktopr_prog.set_fraction, 0.2)
@@ -212,10 +214,17 @@ def install_desktop(self, desktop, state, manager):
     print(env_mapping.get(desktop))
     print("----------------------------------------------------------------")
 
-    if manager == "dnf":
-        com1 = pkexec_dnf
-    elif manager == "rpm-ostree":
-        com1 = pkexec_rpm_ostree
+    if state == "reinst":
+        com1 = pkexec_reinstall
+        if self.ch1.get_active():
+            GLib.idle_add(self.desktopr_stat.set_text, "Clearing cache .....")
+            fn.subprocess.call(
+                ["sh", "-c", "yes | pkexec pacman -Scc"],
+                shell=False,
+                stdout=fn.subprocess.PIPE,
+            )
+    else:
+        com1 = pkexec
 
     # print(list(np.append(com1, command)))
     GLib.idle_add(
@@ -365,7 +374,7 @@ def install_desktop(self, desktop, state, manager):
         # Uninstall all other desktop packages
         for key, data in env_mapping.items():
             if key != desktop:
-                check_package_and_remove(self, data, manager)
+                check_package_and_remove(self, data)
         if self.ch2.get_active():
             GLib.idle_add(self.desktopr_stat.set_text, "Clearing configuration files .....")
             for key, files in file_mapping.items():
@@ -397,3 +406,4 @@ def install_desktop(self, desktop, state, manager):
         print("----------------------------------------------------------------")
         print(desktop + " has NOT been installed")
         print("----------------------------------------------------------------")
+    fn.create_log(self)

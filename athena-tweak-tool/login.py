@@ -15,6 +15,8 @@ import os
 
 # gi.require_version('Gtk', '3.0')
 
+default_app = ["nano", "ttf-hack"]
+
 # =================================================================
 # =                           Login                               =
 # =================================================================
@@ -30,7 +32,8 @@ logins = [
     "Post Apocalypse",
     "Purple Leaves",
 ]
-
+pkexec = ["pkexec", "pacman", "-S", "--needed", "--noconfirm", "--ask=4"]
+pkexec_reinstall = ["pkexec", "pacman", "-S", "--noconfirm", "--ask=4"]
 copy = ["cp", "-Rv"]
 
 login_mapping = {
@@ -125,4 +128,5 @@ def install_login(self, login, state):
     GLib.source_remove(timeout_id)
     timeout_id = None
     GLib.idle_add(self.login_prog.set_fraction, 0)
+    fn.create_log(self)
 

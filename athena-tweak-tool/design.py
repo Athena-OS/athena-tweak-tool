@@ -15,6 +15,8 @@ import os
 
 # gi.require_version('Gtk', '3.0')
 
+default_app = ["nano", "ttf-hack"]
+
 # =================================================================
 # =                         Designs                             =
 # =================================================================
@@ -28,8 +30,8 @@ designs = [
     "Sweet",
     "Temple",
 ]
-pkexec_dnf = ["pkexec", "dnf", "install", "-y"]
-pkexec_rpm_ostree = ["pkexec", "rpm-ostree", "install"]
+pkexec = ["pkexec", "pacman", "-S", "--needed", "--noconfirm", "--ask=4"]
+pkexec_reinstall = ["pkexec", "pacman", "-S", "--noconfirm", "--ask=4"]
 copy = ["cp", "-Rv"]
 
 design_mapping = {
@@ -51,55 +53,54 @@ def check_design(design):
     return False
 
 
-#def check_lock(self, design, state):
-#    """check lock"""
-#    if fn.path.isfile("/var/lib/pacman/db.lck"):
-#        mess_dialog = Gtk.MessageDialog(
-#            parent=self,
-#            flags=0,
-#            message_type=Gtk.MessageType.INFO,
-#            buttons=Gtk.ButtonsType.YES_NO,
-#            text="Lock File Found",
-#        )
-#        mess_dialog.format_secondary_markup(
-#            "pacman lock file found, do you want to remove it and continue?"
-#        )  # noqa
-#
-#        result = mess_dialog.run()
-#        mess_dialog.destroy()
-#
-#        if result in (Gtk.ResponseType.OK, Gtk.ResponseType.YES):
-#            fn.unlink("/var/lib/pacman/db.lck")
-#            # print("YES")
-#            t1 = fn.threading.Thread(
-#                target=install_design,
-#                args=(self, self.d_combo_design.get_active_text(), state),
-#            )
-#            t1.daemon = True
-#            t1.start()
-#    else:
-#        # print("NO FILE")
-#        t1 = fn.threading.Thread(
-#            target=install_design, args=(self, self.d_combo_design.get_active_text(), state)
-#        )
-#        t1.daemon = True
-#        t1.start()
-#
-#    return False
+def check_lock(self, design, state):
+    """check pacman lock"""
+    if fn.path.isfile("/var/lib/pacman/db.lck"):
+        mess_dialog = Gtk.MessageDialog(
+            parent=self,
+            flags=0,
+            message_type=Gtk.MessageType.INFO,
+            buttons=Gtk.ButtonsType.YES_NO,
+            text="Lock File Found",
+        )
+        mess_dialog.format_secondary_markup(
+            "pacman lock file found, do you want to remove it and continue?"
+        )  # noqa
+
+        result = mess_dialog.run()
+        mess_dialog.destroy()
+
+        if result in (Gtk.ResponseType.OK, Gtk.ResponseType.YES):
+            fn.unlink("/var/lib/pacman/db.lck")
+            # print("YES")
+            t1 = fn.threading.Thread(
+                target=install_design,
+                args=(self, self.d_combo_design.get_active_text(), state),
+            )
+            t1.daemon = True
+            t1.start()
+    else:
+        # print("NO FILE")
+        t1 = fn.threading.Thread(
+            target=install_design, args=(self, self.d_combo_design.get_active_text(), state)
+        )
+        t1.daemon = True
+        t1.start()
+
+    return False
 
 
-def check_package_and_remove(self, package, manager):
+def check_package_and_remove(self, package):
     """remove a package if exists"""
     if fn.check_package_installed(package):
         GLib.idle_add(
             self.desktopr_stat.set_text,
             f"Removing {package}...",
         )
-        fn.remove_package(self, package, manager)
+        fn.remove_package_rns(self, package)
 
 
-def install_design(self, design, state, manager):
-    # input parameter 'state' can be removed
+def install_design(self, design, state):
     pkg = design_mapping.get(design)
     command = np.array([pkg])
 
@@ -113,10 +114,17 @@ def install_design(self, design, state, manager):
     print(command)
     print("----------------------------------------------------------------")
 
-    if manager == "dnf":
-        com1 = pkexec_dnf
-    elif manager == "rpm-ostree":
-        com1 = pkexec_rpm_ostree
+    if state == "reinst":
+        com1 = pkexec_reinstall
+        if self.ch1.get_active():
+            GLib.idle_add(self.design_stat.set_text, "Clearing cache .....")
+            fn.subprocess.call(
+                ["sh", "-c", "yes | pkexec pacman -Scc"],
+                shell=False,
+                stdout=fn.subprocess.PIPE,
+            )
+    else:
+        com1 = pkexec
 
     # print(list(np.append(com1, command)))
     GLib.idle_add(
@@ -228,7 +236,7 @@ def install_design(self, design, state, manager):
         # Uninstall all other design packages
         for key, data in design_mapping.items():
             if key != design:
-                check_package_and_remove(self, data, manager)
+                check_package_and_remove(self, data)
         GLib.idle_add(self.design_stat.set_text, "")
         GLib.idle_add(self.design_status.set_text, "This design is installed")
         GLib.idle_add(
@@ -251,4 +259,5 @@ def install_design(self, design, state, manager):
         print("----------------------------------------------------------------")
         print(design + " design has NOT been installed")
         print("----------------------------------------------------------------")
+    fn.create_log(self)
 
