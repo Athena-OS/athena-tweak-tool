@@ -20,10 +20,10 @@ import os
 # =================================================================
 
 designs = [
-    "Akame",
     "Cyborg",
     "Graphite",
     "Hack The Box",
+    "Red Moon",
     "Samurai",
     "Sweet",
     "Temple",
@@ -33,10 +33,10 @@ pkexec_rpm_ostree = ["pkexec", "rpm-ostree", "install"]
 copy = ["cp", "-Rv"]
 
 design_mapping = {
-    "Akame": "athena-akame-theme",
     "Cyborg": "athena-cyborg-theme",
     "Graphite": "athena-graphite-theme",
     "Hack The Box": "athena-htb-theme",
+    "Red Moon": "athena-redmoon-theme",
     "Samurai": "athena-samurai-theme",
     "Sweet": "athena-sweetdark-theme",
     "Temple": "athena-temple-theme",
