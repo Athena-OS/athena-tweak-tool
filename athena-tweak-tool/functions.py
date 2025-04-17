@@ -589,24 +589,45 @@ def check_systemd_boot():
 
 
 def get_user_env_from_proc(user):
-    try:
-        # Grab a PID from a known session process
-        pid = subprocess.check_output(["pgrep", "-u", user, "gnome-session"]).decode().splitlines()[0]
-        environ_path = f"/proc/{pid}/environ"
-        with open(environ_path, "rb") as f:
-            env_vars = dict(
-                line.decode().split("=", 1) for line in f.read().split(b"\0") if b"=" in line
-            )
-        return {
-            "DISPLAY": env_vars.get("DISPLAY", ":0"),
-            "XAUTHORITY": env_vars.get("XAUTHORITY", f"/home/{user}/.Xauthority"),
-            "DBUS_SESSION_BUS_ADDRESS": env_vars.get("DBUS_SESSION_BUS_ADDRESS"),
-            "XDG_CURRENT_DESKTOP": env_vars.get("XDG_CURRENT_DESKTOP"),
-            "XDG_RUNTIME_DIR": env_vars.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"),
-        }
-    except Exception as e:
-        print("Failed to extract environment:", e)
-        return None
+    # Try all common session process names
+    session_procs = [
+        "gnome-session",
+        "plasmashell",
+        "xfce4-session",
+        "cinnamon-session",
+        "mate-session",
+        "lxqt-session",
+        "bspwm",
+        "Hyprland",
+        "sway",
+        "xsession"  # fallback
+    ]
+
+    for proc_name in session_procs:
+        try:
+            pid = subprocess.check_output(["pgrep", "-u", user, proc_name]).decode().splitlines()[0]
+            environ_path = f"/proc/{pid}/environ"
+            with open(environ_path, "rb") as f:
+                env_vars = dict(
+                    line.decode().split("=", 1) for line in f.read().split(b"\0") if b"=" in line
+                )
+
+            return {
+                "DISPLAY": env_vars.get("DISPLAY", ":0"),
+                "XAUTHORITY": env_vars.get("XAUTHORITY", f"/home/{user}/.Xauthority"),
+                "DBUS_SESSION_BUS_ADDRESS": env_vars.get("DBUS_SESSION_BUS_ADDRESS"),
+                "XDG_RUNTIME_DIR": env_vars.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"),
+                "XDG_CURRENT_DESKTOP": env_vars.get("XDG_CURRENT_DESKTOP", ""),
+                "DESKTOP_SESSION": env_vars.get("DESKTOP_SESSION", "")
+            }
+        except subprocess.CalledProcessError:
+            continue
+        except Exception as e:
+            print(f"Error reading env from {proc_name}: {e}")
+            continue
+
+    print(f"⚠️ No matching session process found for user '{user}'")
+    return None
 
 
 # =====================================================

@@ -7,39 +7,24 @@ import functions as fn
 
 import desktopr
 import fixes
-import lightdm
 import login
-import lxdm
-import fastfetch
-import sddm
 import design
-import att
 import terminals
 
 # import template
-import themer
-import user
 import zsh_theme
 import packages
 
 # =============GUI=================
-import att_gui
-import autostart_gui
 import desktopr_gui
 import fixes_gui
-import grub_gui
 import login_gui
 import arcolinuxmirrors_gui
-import fastfetch_gui
 import pacman_gui
-import privacy_gui
 import terminals_gui
-import utilities_gui
 import services_gui
 import shell_gui
-import themer_gui
 import design_gui
-import user_gui
 import packages_gui
 
 # import Template_GUI
@@ -90,30 +75,21 @@ def gui(self, Gtk, Gdk, GdkPixbuf, base_dir, os, Pango):
     stack.set_transition_duration(350)
 
     vboxstack1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    # vboxstack2 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    vboxstack3 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    vboxstack4 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     # vboxstack5 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     # vboxstack6 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     vboxstack7 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    vboxstack8 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     # vboxstack9 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    vboxstack10 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     # vboxstack11 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     vboxstack12 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    vboxstack13 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     vboxstack14 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     # vboxstack15 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     vboxstack16 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     # vboxstack17 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    vboxstack18 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     vboxstack19 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    vboxstack20 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     # vboxstack21 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     vboxstack22 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     vboxstack23 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     vboxstack24 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-    vboxstack25 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
     vboxstack26 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
     # ==========================================================
@@ -144,18 +120,6 @@ Then you will be able to set the mirrors of ArcoLinux"
         vboxstack16.pack_start(lbl2, True, False, 0)
 
     # ==========================================================
-    #                 ATT
-    # ==========================================================
-
-    att_gui.gui(self, Gtk, vboxstack25, att, fn)
-
-    # ==========================================================
-    #                AUTOSTART
-    # ==========================================================
-
-    autostart_gui.gui(self, Gtk, vboxstack13, fn)
-
-    # ==========================================================
     #                DESKTOP
     # ==========================================================
 
@@ -175,40 +139,10 @@ Then you will be able to set the mirrors of ArcoLinux"
     login_gui.gui(self, Gtk, GdkPixbuf, vboxstack22, login, fn, base_dir, Pango)
 
     # # ==========================================================
-    # #               FASTFETCH
-    # # ==========================================================
-
-    if fn.file_check(fn.fastfetch_config):
-        fastfetch_gui.gui(self, Gtk, vboxstack8, fastfetch, fn)
-    else:
-        hbox31 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        hbox41 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        lbl1 = Gtk.Label(xalign=0)
-        lbl1.set_text("fastfetch Editor")
-        lbl1.set_name("title")
-        hseparator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
-        hbox41.pack_start(hseparator, True, True, 0)
-        hbox31.pack_start(lbl1, False, False, 0)
-        vboxstack8.pack_start(hbox31, False, False, 0)
-        vboxstack8.pack_start(hbox41, False, False, 0)
-        fastfetch_message = Gtk.Label()
-        fastfetch_message.set_markup(
-            "If you install <b>fastfetch</b> and the <i>ArcoLinux \
-themes</i> you can customize <b>fastfetch</b>"
-        )
-        vboxstack8.pack_start(fastfetch_message, True, False, 0)
-
-    # # ==========================================================
     # #               FIXES
     # # ==========================================================
 
     fixes_gui.gui(self, Gtk, vboxstack19, fn, fixes)
-
-    # ==========================================================
-    #                 GRUB
-    # ==========================================================
-
-    grub_gui.gui(self, Gtk, vboxstack4, fn)
 
     # ==========================================================
     #                 PACMAN
@@ -216,12 +150,6 @@ themes</i> you can customize <b>fastfetch</b>"
 
     if fn.file_check(fn.pacman):
         pacman_gui.gui(self, Gtk, vboxstack1, fn)
-
-    # ==========================================================
-    #                 PRIVACY - HBLOCK
-    # ==========================================================
-
-    privacy_gui.gui(self, Gtk, vboxstack3, fn)
 
     # ==========================================================
     #                      SERVICES
@@ -246,24 +174,6 @@ themes</i> you can customize <b>fastfetch</b>"
     # # ==========================================================
 
     terminals_gui.gui(self, Gtk, vboxstack7, terminals)
-
-    # # ==========================================================
-    # #               TERMINAL FUN
-    # # ==========================================================
-
-    utilities_gui.gui(self, Gtk, vboxstack20, fn)
-
-    # ==========================================================
-    #                 THEMES
-    # ==========================================================
-
-    themer_gui.gui(self, Gtk, GdkPixbuf, vboxstack10, themer, fn, base_dir)
-
-    # # ==========================================================
-    # #                USER
-    # # ==========================================================
-
-    user_gui.gui(self, Gtk, vboxstack18, user, fn)
 
     # =====================================================
     #                       PACKAGES - EXPORT/INSTALL
