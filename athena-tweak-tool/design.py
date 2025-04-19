@@ -33,13 +33,13 @@ pkexec_rpm_ostree = ["pkexec", "rpm-ostree", "install"]
 copy = ["cp", "-Rv"]
 
 design_mapping = {
-    "Cyborg": "athena-cyborg-theme",
-    "Graphite": "athena-graphite-theme",
-    "Hack The Box": "athena-htb-theme",
-    "Red Moon": "athena-redmoon-theme",
-    "Samurai": "athena-samurai-theme",
-    "Sweet": "athena-sweetdark-theme",
-    "Temple": "athena-temple-theme",
+    "Cyborg": "athena-cyborg-design",
+    "Graphite": "athena-graphite-design",
+    "Hack The Box": "athena-htb-design",
+    "Red Moon": "athena-redmoon-design",
+    "Samurai": "athena-samurai-design",
+    "Sweet": "athena-sweetdark-design",
+    "Temple": "athena-temple-design",
 }
 
 
