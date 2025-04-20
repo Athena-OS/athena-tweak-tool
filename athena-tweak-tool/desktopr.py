@@ -57,7 +57,7 @@ env_mapping = {
     "GNOME": "athena-gnome-config",
     "Hyprland": "athena-hyprland-config",
     "MATE": "athena-mate-base",
-    "Plasma": "athena-kde-base",
+    "Plasma": "athena-plasma-base",
     "XFCE": "athena-xfce-refined",
 }
 
