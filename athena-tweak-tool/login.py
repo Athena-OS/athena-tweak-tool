@@ -63,7 +63,7 @@ def check_login(login):
 def install_login(self, login, state):
     login_greeter = login_mapping.get(login)
     base_dir = fn.path.dirname(fn.path.realpath(__file__))
-    command = [ base_dir + "/data/any/archlinux-sddm-greeter", login_greeter ]
+    command = [ base_dir + "/login_data/sddm-greeter", login_greeter ]
 
     GLib.idle_add(self.login_prog.set_fraction, 0.2)
 
