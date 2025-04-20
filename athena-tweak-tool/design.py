@@ -158,7 +158,7 @@ def install_design(self, design, state, manager):
                         )
                         env = fn.get_user_env_from_proc(fn.sudo_username)
                         subproc = fn.subprocess.Popen(
-                            ["sudo", "-u", fn.sudo_username, "env", f"DISPLAY={env['DISPLAY']}", f"XAUTHORITY={env['XAUTHORITY']}", f"DBUS_SESSION_BUS_ADDRESS={env['DBUS_SESSION_BUS_ADDRESS']}", f"XDG_CURRENT_DESKTOP={env['XDG_CURRENT_DESKTOP']}", "theme-switcher", design.replace(" ", "")],
+                            ["sudo", "-u", fn.sudo_username, "env", f"DISPLAY={env['DISPLAY']}", f"XAUTHORITY={env['XAUTHORITY']}", f"DBUS_SESSION_BUS_ADDRESS={env['DBUS_SESSION_BUS_ADDRESS']}", f"XDG_CURRENT_DESKTOP={env['XDG_CURRENT_DESKTOP']}", f"DESKTOP_SESSION={env['DESKTOP_SESSION']}", "theme-switcher", design.replace(" ", "")],
                             bufsize=1,
                             stdout=fn.subprocess.PIPE,
                             stderr=fn.subprocess.PIPE,  # Capture stderr for error handling
