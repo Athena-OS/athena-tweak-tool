@@ -356,7 +356,7 @@ def get_user_env_from_proc(user):
         "gnome-session",
         "plasmashell",
         "xfce4-session",
-        "cinnamon-session",
+        "cinnamon-sessio",
         "mate-session",
         "lxqt-session",
         "bspwm",
