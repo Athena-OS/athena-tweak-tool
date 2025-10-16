@@ -36,6 +36,7 @@ from os import readlink
 # from subprocess import PIPE, STDOUT, call
 # import polybar
 
+GLib.set_prgname("athena-tweak-tool")
 
 base_dir = fn.path.dirname(fn.path.realpath(__file__))
 pmf = pacman_functions
