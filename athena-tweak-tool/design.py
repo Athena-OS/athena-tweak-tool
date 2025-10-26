@@ -23,6 +23,7 @@ default_app = ["nano", "ttf-hack"]
 
 designs = [
     "Cyborg",
+    "Frost",
     "Graphite",
     "Hack The Box",
     "Red Moon",
@@ -36,6 +37,7 @@ copy = ["cp", "-Rv"]
 
 design_mapping = {
     "Cyborg": "athena-cyborg-design",
+    "Frost": "athena-frost-design",
     "Graphite": "athena-graphite-design",
     "Hack The Box": "athena-htb-design",
     "Red Moon": "athena-redmoon-design",
