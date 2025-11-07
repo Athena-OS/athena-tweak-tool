@@ -20,13 +20,10 @@ import os
 # =================================================================
 
 desktops = [
-    "Bspwm",
     "Cinnamon",
     "GNOME",
-    "Hyprland",
     "MATE",
     "Plasma",
-    "XFCE Picom",
     "XFCE Refined",
 ]
 pkexec = ["pkexec", "pacman", "-S", "--needed", "--noconfirm", "--ask=4"]
@@ -34,13 +31,10 @@ pkexec_reinstall = ["pkexec", "pacman", "-S", "--noconfirm", "--ask=4"]
 copy = ["cp", "-Rv"]
 
 session_mapping = {
-    "Bspwm": "bspwm",
     "Cinnamon": "cinnamon",
-    "GNOME": "gnome-xorg",
-    "Hyprland": "hyprland",
+    "GNOME": "gnome",
     "MATE": "mate",
     "Plasma": "plasma",
-    "XFCE Picom": "xfce",
     "XFCE Refined": "xfce",
 }
 
@@ -57,32 +51,14 @@ session_mapping = {
 # =================================================================
 
 env_mapping = {
-    "Bspwm": "athena-bspwm-config",
     "Cinnamon": "athena-cinnamon-base",
     "GNOME": "athena-gnome-config",
-    "Hyprland": "athena-hyprland-config",
     "MATE": "athena-mate-base",
-    "Plasma": "athena-kde-base",
-    "XFCE Picom": "athena-xfce-picom",
+    "Plasma": "athena-plasma-base",
     "XFCE Refined": "athena-xfce-refined",
 }
 
 file_mapping = {
-    "Bspwm": [
-        "/etc/skel/.p10k.zsh",
-        "/etc/skel/.config/bspwm",
-        "/etc/skel/.config/btop",
-        "/etc/skel/.config/gtk-3.0",
-        "/etc/skel/.config/mpd",
-        "/etc/skel/.config/ncmpcpp",
-        "/etc/skel/.config/paru",
-        "/etc/skel/.config/ranger",
-        "/etc/skel/.config/rofi",
-        "/etc/skel/.local/bin",
-        "/etc/skel/.local/share/applications",
-        "/etc/skel/.local/share/asciiart",
-        "/etc/skel/.local/share/fonts"
-        ],
     "Cinnamon": [
         "/etc/skel/.config/cinnamon",
         "/etc/skel/.flag-cinnamon-once"
@@ -90,7 +66,6 @@ file_mapping = {
     "GNOME": [
         "/etc/skel/.flag-gnome-once"
         ],
-    "Hyprland": [],
     "MATE": [
         "/etc/skel/.flag-mate-once"
         ],
@@ -99,15 +74,6 @@ file_mapping = {
         "/etc/skel/.config/kwinrulesrc",
         "/etc/skel/.config/plasma-org.kde.plasma.desktop-appletsrc",
         "/etc/skel/.flag-kde-once"
-        ],
-    "XFCE Picom": [
-        "/etc/skel/.config/xfce4",
-        "/etc/skel/.flag-xfce-once",
-        "/etc/skel/.config/eww",
-        "/etc/skel/.config/gtk-3.0/gtk.css",
-        "/etc/skel/.config/picom.conf",
-        "/etc/skel/.profile",
-        "/etc/skel/.Xresources"
         ],
     "XFCE Refined": [
         "/etc/skel/.config/xfce4",
