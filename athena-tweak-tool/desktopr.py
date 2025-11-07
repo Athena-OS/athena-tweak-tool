@@ -26,8 +26,8 @@ desktops = [
     "Plasma",
     "XFCE Refined",
 ]
-pkexec = ["pkexec", "pacman", "-S", "--needed", "--noconfirm", "--ask=4"]
-pkexec_reinstall = ["pkexec", "pacman", "-S", "--noconfirm", "--ask=4"]
+pkexec = ["pkexec", "pacman", "-S", "--needed", "--noconfirm", "--ask=4", "--overwrite", "\*"]
+pkexec_reinstall = ["pkexec", "pacman", "-S", "--noconfirm", "--ask=4", "--overwrite", "\*"]
 copy = ["cp", "-Rv"]
 
 session_mapping = {
