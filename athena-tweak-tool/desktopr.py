@@ -7,6 +7,7 @@ import numpy as np
 from gi.repository import GLib, Gtk  # noqa
 import functions as fn
 import os
+import time
 
 # import Settings
 # import gi
@@ -146,7 +147,7 @@ def check_package_and_remove(self, package):
         fn.remove_package_rns(self, package)
 
 
-def install_desktop(self, desktop, state):
+def install_desktop(self, desktop, state, reboot_on_success=False):
     # error = False
     # make backup of your .config
     now = datetime.datetime.now()
@@ -358,6 +359,16 @@ def install_desktop(self, desktop, state):
         print("----------------------------------------------------------------")
         print(desktop + " has been installed")
         print("----------------------------------------------------------------")
+
+        if reboot_on_success:
+            GLib.idle_add(self.desktopr_stat.set_text, "Installation finished. Rebooting in 5 seconds…")
+            time.sleep(5)
+            try:
+                # Will prompt for auth if needed
+                fn.subprocess.Popen(["pkexec", "systemctl", "reboot"])
+            except Exception as e:
+                print(f"Failed to reboot automatically: {e}")
+                GLib.idle_add(self.desktopr_error.set_text, f"Failed to reboot automatically: {e}")
     else:
         GLib.idle_add(
             self.desktop_status.set_markup, "This desktop is <b>NOT</b> installed"
@@ -373,3 +384,38 @@ def install_desktop(self, desktop, state):
         print(desktop + " has NOT been installed")
         print("----------------------------------------------------------------")
     fn.create_log(self)
+
+def check_lock(self, desktop, state, reboot_on_success):
+    """check pacman lock"""
+    if fn.path.isfile("/var/lib/pacman/db.lck"):
+        mess_dialog = Gtk.MessageDialog(
+            parent=self,
+            flags=0,
+            message_type=Gtk.MessageType.INFO,
+            buttons=Gtk.ButtonsType.YES_NO,
+            text="Lock File Found",
+        )
+        mess_dialog.format_secondary_markup(
+            "pacman lock file found, do you want to remove it and continue?"
+        )
+
+        result = mess_dialog.run()
+        mess_dialog.destroy()
+
+        if result in (Gtk.ResponseType.OK, Gtk.ResponseType.YES):
+            fn.unlink("/var/lib/pacman/db.lck")
+            t1 = fn.threading.Thread(
+                target=install_desktop,
+                args=(self, self.d_combo_desktop.get_active_text(), state, reboot_on_success),
+            )
+            t1.daemon = True
+            t1.start()
+    else:
+        t1 = fn.threading.Thread(
+            target=install_desktop,
+            args=(self, self.d_combo_desktop.get_active_text(), state, reboot_on_success),
+        )
+        t1.daemon = True
+        t1.start()
+
+    return False

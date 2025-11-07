@@ -676,9 +676,31 @@ class Main(Gtk.Window):
             self.desktop_status.set_text("This desktop is NOT installed")
 
     def on_install_clicked_desktop(self, widget, state):
-        fn.create_log(self)
-        print("Installing " + self.d_combo_desktop.get_active_text())
-        desktopr.check_lock(self, self.d_combo_desktop.get_active_text(), state)
+        # Popup confirmation
+        dialog = Gtk.MessageDialog(
+            parent=self,
+            flags=Gtk.DialogFlags.MODAL,
+            message_type=Gtk.MessageType.WARNING,
+            buttons=Gtk.ButtonsType.YES_NO,
+            text="This action will reboot the system."
+        )
+        dialog.format_secondary_text(
+            "The installer will proceed and, if successful, automatically reboot your system.\n\nDo you want to continue?"
+        )
+        dialog.set_title("Confirm Install")
+        response = dialog.run()
+        dialog.destroy()
+    
+        if response in (Gtk.ResponseType.YES, Gtk.ResponseType.OK):
+            # Proceed with install/reinstall
+            fn.create_log(self)
+            desktop = self.d_combo_desktop.get_active_text()
+            print(f"Installing {desktop}")
+            # NOTE: check_lock must accept (self, desktop, state, reboot_on_success)
+            desktopr.check_lock(self, desktop, state, True)
+        else:
+            # User cancelled
+            GLib.idle_add(self.desktopr_stat.set_text, "Installation cancelled by user.")
 
     def on_default_clicked_desktop(self, widget):
         fn.create_log(self)
