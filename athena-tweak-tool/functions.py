@@ -1657,12 +1657,12 @@ def disable_slick_greeter(self):
 # =====================================================
 
 
-log_dir = "/var/log/archlinux/"
-att_log_dir = "/var/log/archlinux/att/"
+log_dir = "/var/log/athena/"
+att_log_dir = "/var/log/athena/att/"
 
 
 def create_log(self):
-    print("Making log in /var/log/archlinux")
+    print("Making log in /var/log/athena")
     now = datetime.datetime.now()
     time = now.strftime("%Y-%m-%d-%H-%M-%S")
     destination = att_log_dir + "att-log-" + time
